@@ -1,0 +1,132 @@
+﻿@model List<TaskManagementAPP.Models.Domain.TaskItem>
+@{
+    int nextPage = Convert.ToInt32(ViewBag.PageNumber) + 1;
+    int prevPage = Convert.ToInt32(ViewBag.PageNumber) - 1;
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Show All Tasks - Task Functionality</h1>
+    </div>
+</div>
+
+<form 
+     method="get"
+     asp-controller="Tasks",
+     asp-action="List"
+      >
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col col-md-3 d-flex">
+                <input type="text" class="form-control" 
+                       name="searchQuery" value="@ViewBag.SearchQuery" />
+                <button type="submit" class="btn btn-warning ms-3">Search</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<div class="container py-5">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>
+                   Title
+                  <span>
+                     <span>
+                         <a class="btn btn-dark"
+                            asp-controller="Tasks"
+                            asp-action="List"
+                            asp-route-sortBy="Title"
+                            asp-route-sortDirection="Asc"
+                            asp-route-searchQuery="@ViewBag.SearchQuery">
+                            <i class="bi bi-arrow-up"></i>
+
+                         </a>
+                     </span>
+                        <span>
+                            <a class="btn btn-dark"
+                               asp-controller="Tasks"
+                               asp-action="List"
+                               asp-route-sortBy="Title"
+                               asp-route-sortDirection="Desc"
+                               asp-route-searchQuery="@ViewBag.SearchQuery">
+                                <i class="bi bi-arrow-down"></i>
+
+                            </a>
+                        </span>
+                  </span>
+
+                </th>
+                <th> </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var taskitem in Model)
+            {
+                <tr>
+                    <td>@taskitem.Id</td>
+                    <td>@taskitem.Title</td>
+                    <td>
+                        <a asp-area="" 
+                           asp-controller="Tasks"
+                           asp-action="Edit"
+                           asp-route-id="@taskitem.Id">
+                             Edit
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link"
+                   asp-controller="Tasks"
+                   asp-action="List"
+                   asp-route-pageNumber="@prevPage"
+                   asp-route-pageSize="@ViewBag.PageSize"
+                   asp-route-sortBy="@ViewBag.SortBy"
+                   asp-route-sortDirection="@ViewBag.SortDirection">
+                    Previous
+                </a>
+            </li>
+
+            @for (int i=1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item">
+                    <a class="page-link" 
+                       asp-controller="Tasks"
+                       asp-action="List"
+                       asp-route-pageNumber="@i"
+                       asp-route-pageSize="@ViewBag.PageSize"
+                       asp-route-sortBy="@ViewBag.SortBy"
+                       asp-route-sortDirection="@ViewBag.SortDirection">
+                         @i
+
+                    </a>
+                </li>
+            }
+
+            
+
+            
+            <li class="page-item">
+                <a class="page-link"
+                   asp-controller="Tasks"
+                   asp-action="List"
+                   asp-route-pageNumber="@nextPage"
+                   asp-route-pageSize="@ViewBag.PageSize"
+                   asp-route-sortBy="@ViewBag.SortBy"
+                   asp-route-sortDirection="@ViewBag.SortDirection">
+                     Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
