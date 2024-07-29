@@ -12,8 +12,8 @@ using TaskManagementAPP.Data;
 namespace TaskManagementAPP.Migrations
 {
     [DbContext(typeof(TaskDbContext))]
-    [Migration("20240726160401_RenameTaskToTaskItem")]
-    partial class RenameTaskToTaskItem
+    [Migration("20240729074929_Last Migration")]
+    partial class LastMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,6 @@ namespace TaskManagementAPP.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DueDate")
@@ -45,7 +44,8 @@ namespace TaskManagementAPP.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 

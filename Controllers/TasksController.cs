@@ -34,8 +34,9 @@ namespace TaskManagementAPP.Controllers
 
 
             await taskRepository.AddAsync(taskitem);
+            TempData["Message"] = "Task added successfully!";
 
-            return RedirectToAction("Add");
+            return RedirectToAction("List");
         }
 
         [HttpGet]
@@ -115,7 +116,8 @@ namespace TaskManagementAPP.Controllers
             if (updatedTask != null)
             {
                 //show success notification
-                return RedirectToAction("Edit");
+                TempData["Message"] = "Task updated successfully!";
+                return RedirectToAction("List");
             }
             //show error notification 
 
@@ -124,18 +126,20 @@ namespace TaskManagementAPP.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Delete(EditTaskRequest editTaskRequest)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id )
         {
             //Talk to repository to delete this task
-           var deletedTask =  await taskRepository.DeleteAsync(editTaskRequest.Id);
+            var deletedTask =  await taskRepository.DeleteAsync(id);
             if (deletedTask != null)
             {
                 //show success notification
+                TempData["Message"] = "Task deleted successfully!";
                 return RedirectToAction("List");
             }
 
             //show error notification 
-            return RedirectToAction("Edit", new { id = editTaskRequest.Id});
+           return RedirectToAction("Edit", new { id });
         }
 
     }
