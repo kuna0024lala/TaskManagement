@@ -93,6 +93,7 @@ namespace TaskManagementAPP.Repositories.Implementation
                 existingTask.Title = task.Title;
                 existingTask.Description = task.Description;
                 existingTask.DueDate = task.DueDate;
+                existingTask.AssignedTo = task.AssignedTo;
                 existingTask.IsCompleted = task.IsCompleted;
 
                 await taskDbContext.SaveChangesAsync();

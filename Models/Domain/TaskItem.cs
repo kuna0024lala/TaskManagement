@@ -16,6 +16,10 @@ namespace TaskManagementAPP.Models.Domain
 
         public bool IsCompleted { get; set; } = false;
 
+        [Required(ErrorMessage = "Assigned to is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email format.")]
+        public string AssignedTo { get; set; }
+
 
     }
 }

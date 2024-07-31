@@ -29,6 +29,7 @@ namespace TaskManagementAPP.Controllers
                 Title = addTaskRequest.Title,
                 Description = addTaskRequest.Description,
                 DueDate = addTaskRequest.DueDate,
+                AssignedTo = addTaskRequest.AssignedTo,
                 IsCompleted = addTaskRequest.IsCompleted,
             };
 
@@ -86,6 +87,7 @@ namespace TaskManagementAPP.Controllers
                     Title = taskitem.Title,
                     Description = taskitem.Description,
                     DueDate = taskitem.DueDate,
+                    AssignedTo = taskitem.AssignedTo,
                     IsCompleted = taskitem.IsCompleted,
                 };
                 return View(model); 
@@ -107,6 +109,7 @@ namespace TaskManagementAPP.Controllers
                 Title = editTaskRequest.Title,
                 Description = editTaskRequest.Description,
                 DueDate = editTaskRequest.DueDate,
+                AssignedTo = editTaskRequest.AssignedTo,
                 IsCompleted = editTaskRequest.IsCompleted,
             };
 
