@@ -1,4 +1,4 @@
-﻿@model TaskManagementAPP.Models.ViewModels.EditTaskRequest
+@model TaskManagementAPP.Models.ViewModels.EditTaskRequest
 @{
 }
 
@@ -23,23 +23,27 @@
         <form method="post">
 
             <div class="mb-3">
-                <label class="form-label">Id</label>
-                <input type="text" class="form-control" id="id" asp-for="Id" readonly />
+                @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "form-label" })
+                @Html.TextBoxFor(model => model.Id, new { @class = "form-control", id = "id", @readonly = "readonly" })
+                @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Title</label>
-                <input type="text" class="form-control" id="title" asp-for="Title" />
+                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "form-label" })
+                @Html.TextBoxFor(model => model.Title, new { @class = "form-control", id = "title" })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Description</label>
-                <textarea type="text" class="form-control" id="description" asp-for="Description"></textarea>
+                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "form-label" })
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", id = "description" })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>
 
             <div class="mb-3">
-                <label class="form-label">DueDate</label>
-                <input type="date" class="form-control" id="duedate" asp-for="DueDate" />
+                @Html.LabelFor(model => model.DueDate, htmlAttributes: new { @class = "form-label" })
+                @Html.TextBoxFor(model => model.DueDate, new { @class = "form-control", id = "duedate", type = "date" })
+                @Html.ValidationMessageFor(model => model.DueDate, "", new { @class = "text-danger" })
             </div>
 
             <div class="mb-3">
@@ -48,17 +52,16 @@
                 @Html.ValidationMessageFor(model => model.AssignedTo, "", new { @class = "text-danger" })
             </div>
 
-
             <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="iscompleted" asp-for="IsCompleted">
-                <label class="form-check-label">
-                    Is Completed?
-                </label>
+                @Html.CheckBoxFor(model => model.IsCompleted, new { @class = "form-check-input", id = "iscompleted" })
+                @Html.LabelFor(model => model.IsCompleted, htmlAttributes: new { @class = "form-check-label" })
+                @Html.ValidationMessageFor(model => model.IsCompleted, "", new { @class = "text-danger" })
             </div>
 
             <div class="mb-3">
                 <button type="submit" class="btn btn-dark">Update</button>
             </div>
+           
         </form>
        
 
