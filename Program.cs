@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using TaskManagementAPP.Data;
 using TaskManagementAPP.Repositories.Implementation;
 using TaskManagementAPP.Repositories.Interface;
@@ -12,6 +13,8 @@ builder.Services.AddDbContext<TaskDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("TaskDbConnectionString")));
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 var app = builder.Build();
 
