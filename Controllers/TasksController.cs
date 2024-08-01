@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using TaskManagementAPP.Models.Domain;
 using TaskManagementAPP.Models.ViewModels;
 using TaskManagementAPP.Repositories.Interface;
@@ -13,6 +14,7 @@ namespace TaskManagementAPP.Controllers
         {
             this.taskRepository = taskRepository;
         }
+    
 
         [HttpGet]
         public IActionResult Add()
@@ -24,20 +26,23 @@ namespace TaskManagementAPP.Controllers
         public async Task<IActionResult> Add(AddTaskRequest addTaskRequest)
         {
             //Map View model to domain model
-            var taskitem = new TaskItem
-            {
-                Title = addTaskRequest.Title,
-                Description = addTaskRequest.Description,
-                DueDate = addTaskRequest.DueDate,
-                AssignedTo = addTaskRequest.AssignedTo,
-                IsCompleted = addTaskRequest.IsCompleted,
-            };
+           
+                var taskitem = new TaskItem
+                {
+                    Title = addTaskRequest.Title,
+                    Description = addTaskRequest.Description,
+                    DueDate = addTaskRequest.DueDate,
+                    AssignedTo = addTaskRequest.AssignedTo,
+                    IsCompleted = addTaskRequest.IsCompleted,
+                };
 
 
-            await taskRepository.AddAsync(taskitem);
-            TempData["Message"] = "Task added successfully!";
+                await taskRepository.AddAsync(taskitem);
+                TempData["Message"] = "Task added successfully!";
 
-            return RedirectToAction("List");
+                return RedirectToAction("List");
+            
+            
         }
 
         [HttpGet]
@@ -103,25 +108,28 @@ namespace TaskManagementAPP.Controllers
         public async Task<IActionResult> Edit(EditTaskRequest editTaskRequest)
         {
             //map view model to domain model
-            var taskItemDomainModel = new TaskItem
-            {
-                Id = editTaskRequest.Id,
-                Title = editTaskRequest.Title,
-                Description = editTaskRequest.Description,
-                DueDate = editTaskRequest.DueDate,
-                AssignedTo = editTaskRequest.AssignedTo,
-                IsCompleted = editTaskRequest.IsCompleted,
-            };
+           
+                var taskItemDomainModel = new TaskItem
+                {
+                    Id = editTaskRequest.Id,
+                    Title = editTaskRequest.Title,
+                    Description = editTaskRequest.Description,
+                    DueDate = editTaskRequest.DueDate,
+                    AssignedTo = editTaskRequest.AssignedTo,
+                    IsCompleted = editTaskRequest.IsCompleted,
+                };
 
-            //submit information to repository to update 
-           var updatedTask = await taskRepository.UpdateAsync(taskItemDomainModel);
+                //submit information to repository to update 
+                var updatedTask = await taskRepository.UpdateAsync(taskItemDomainModel);
 
-            if (updatedTask != null)
-            {
-                //show success notification
-                TempData["Message"] = "Task updated successfully!";
-                return RedirectToAction("List");
-            }
+                if (updatedTask != null)
+                {
+                    //show success notification
+                    TempData["Message"] = "Task updated successfully!";
+                    return RedirectToAction("List");
+                }
+            
+            
             //show error notification 
 
             return RedirectToAction("Edit");
@@ -143,6 +151,44 @@ namespace TaskManagementAPP.Controllers
 
             //show error notification 
            return RedirectToAction("Edit", new { id });
+        }
+
+
+        public async Task<IActionResult> ExportToExcel()
+        {
+            var tasks = await taskRepository.GetAllAsync();
+
+            var taskItemsList = tasks.ToList();
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Tasks");
+
+                worksheet.Cells[1, 1].Value = "Id";
+                worksheet.Cells[1, 2].Value = "Title";
+                worksheet.Cells[1, 3].Value = "Description";
+                worksheet.Cells[1, 4].Value = "DueDate";
+                worksheet.Cells[1, 5].Value = "AssignedTo";
+                worksheet.Cells[1, 6].Value = "IsCompleted";
+
+                for (int i = 0; i < taskItemsList.Count; i++)
+                {
+                    worksheet.Cells[i + 2, 1].Value = taskItemsList[i].Id;
+                    worksheet.Cells[i + 2, 2].Value = taskItemsList[i].Title;
+                    worksheet.Cells[i + 2, 3].Value = taskItemsList[i].Description;
+                    worksheet.Cells[i + 2, 4].Value = taskItemsList[i].DueDate.HasValue ? taskItemsList[i].DueDate.Value.ToString("yyyy-MM-dd") : "N/A";
+                    worksheet.Cells[i + 2, 5].Value = taskItemsList[i].AssignedTo;
+                    worksheet.Cells[i + 2, 6].Value = taskItemsList[i].IsCompleted ? "Yes" : "No";
+                }
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+
+                var fileName = $"Tasks_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
+                var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                return File(stream, contentType, fileName);
+            }
         }
 
     }
