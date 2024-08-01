@@ -1,4 +1,4 @@
-﻿@model List<TaskManagementAPP.Models.Domain.TaskItem>
+@model List<TaskManagementAPP.Models.Domain.TaskItem>
 @{
     int nextPage = Convert.ToInt32(ViewBag.PageNumber) + 1;
     int prevPage = Convert.ToInt32(ViewBag.PageNumber) - 1;
@@ -19,22 +19,23 @@
 }
 
 
-<form 
-     method="get"
-     asp-controller="Tasks",
-     asp-action="List"
-      >
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col col-md-3 d-flex">
-                <input type="text" class="form-control" 
-                       name="searchQuery" value="@ViewBag.SearchQuery" />
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-3">
+            <form method="post" asp-controller="Tasks" asp-action="ExportToExcel">
+                <button type="submit" class="btn btn-success">Export to Excel</button>
+            </form>
+        </div>
+        <div class="col-md-3 d-flex">
+            <form method="get" asp-controller="Tasks" asp-action="List" class="d-flex">
+                <input type="text" class="form-control" name="searchQuery" value="@ViewBag.SearchQuery" />
                 <button type="submit" class="btn btn-warning ms-3">Search</button>
-            </div>
+            </form>
         </div>
     </div>
-</form>
+</div>
 
+  
 
 <div class="container py-5">
     <table class="table">
@@ -152,5 +153,6 @@
             </li>
         </ul>
     </nav>
+
 
 </div>
