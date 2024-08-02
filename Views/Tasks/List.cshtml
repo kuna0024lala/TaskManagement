@@ -284,19 +284,17 @@
         const rowCheckboxes = document.querySelectorAll('.row-checkbox');
         const selectedIdsInput = document.getElementById('selectedIds');
 
-        // Check/uncheck all checkboxes
             checkAll.addEventListener('change', function () {
             rowCheckboxes.forEach(checkbox => checkbox.checked = checkAll.checked);
             updateSelectedIds();
         });
 
-        // Check/uncheck header checkbox based on row checkboxes
            rowCheckboxes.forEach(checkbox => checkbox.addEventListener('change', function () {
             checkAll.checked = [...rowCheckboxes].every(checkbox => checkbox.checked);
             updateSelectedIds();
         }));
 
-        // Update hidden input with selected IDs
+        
         function updateSelectedIds() {
             const selectedIds = [...rowCheckboxes].filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
             selectedIdsInput.value = selectedIds.join(',');
