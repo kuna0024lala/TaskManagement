@@ -154,11 +154,18 @@ namespace TaskManagementAPP.Controllers
         }
 
 
-        public async Task<IActionResult> ExportToExcel()
+        public async Task<IActionResult> ExportToExcel(string selectedIds)
         {
+            if (string.IsNullOrEmpty(selectedIds))
+            {
+                TempData["Message"] = "No tasks selected for export.";
+                return RedirectToAction("List");
+            }
+
+            var taskIds = selectedIds.Split(',').Select(int.Parse).ToList();
             var tasks = await taskRepository.GetAllAsync();
 
-            var taskItemsList = tasks.ToList();
+            var taskItemsList = tasks.Where(t => taskIds.Contains(t.Id)).ToList();
 
             using (var package = new ExcelPackage())
             {
@@ -187,6 +194,8 @@ namespace TaskManagementAPP.Controllers
 
                 var fileName = $"Tasks_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
                 var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                TempData["Message"] = "Tasks exported successfully!";
                 return File(stream, contentType, fileName);
             }
         }
